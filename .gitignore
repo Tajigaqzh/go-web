@@ -1,0 +1,38 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+/go-web
+
+# Test and coverage
+*.out
+coverage.*
+*.coverprofile
+
+# Dependencies
+vendor/
+
+# Local config and secrets
+.env
+.env.*
+!.env.example
+config.yaml
+*.log
+logs/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Generated
+.code-review-graph/

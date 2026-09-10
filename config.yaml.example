@@ -1,0 +1,29 @@
+database:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: password
+  dbname: test
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  db: 0
+
+jwt:
+  secret: change-me-in-production
+  access_ttl: 2h
+  refresh_ttl: 168h
+
+server:
+  port: 8080
+  mode: debug
+
+log:
+  level: debug
+  encoding: console
+  dir: logs
+  rotate: day
+  max_age: 7
+  console: true

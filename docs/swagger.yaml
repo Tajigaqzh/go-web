@@ -269,45 +269,6 @@ paths:
       tags:
       - canvases
   /canvases/{id}:
-    delete:
-      parameters:
-      - description: 画布 ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/resp.Response'
-      security:
-      - BearerAuth: []
-      summary: 删除画布
-      tags:
-      - canvases
     get:
       parameters:
       - description: 画布 ID
@@ -350,62 +311,6 @@ paths:
       security:
       - BearerAuth: []
       summary: 获取画布详情
-      tags:
-      - canvases
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: 画布 ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: 画布内容
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/controller.saveCanvasRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/resp.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Canvas'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/resp.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/resp.Response'
-      security:
-      - BearerAuth: []
-      summary: 更新画布
       tags:
       - canvases
   /canvases/{id}/submit:
@@ -459,6 +364,103 @@ paths:
       security:
       - BearerAuth: []
       summary: 提交画布审核
+      tags:
+      - canvases
+  /canvases/deleteById/{id}:
+    post:
+      parameters:
+      - description: 画布 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resp.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除画布
+      tags:
+      - canvases
+  /canvases/updateById/{id}:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 画布 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 画布内容
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.saveCanvasRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/resp.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Canvas'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/resp.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/resp.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新画布
       tags:
       - canvases
 securityDefinitions:

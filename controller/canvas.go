@@ -149,7 +149,7 @@ func CreateCanvas(c *gin.Context) {
 // @Param request body saveCanvasRequest true "画布内容"
 // @Success 200 {object} resp.Response{data=model.Canvas}
 // @Failure 400,401,403,404,409,500 {object} resp.Response
-// @Router /canvases/{id} [put]
+// @Router /canvases/updateById/{id} [post]
 func UpdateCanvas(c *gin.Context) {
 	id, err := parseCanvasID(c)
 	if err != nil {
@@ -200,7 +200,7 @@ func UpdateCanvas(c *gin.Context) {
 // @Param id path int true "画布 ID"
 // @Success 200 {object} resp.Response
 // @Failure 400,401,403,404,500 {object} resp.Response
-// @Router /canvases/{id} [delete]
+// @Router /canvases/deleteById/{id} [post]
 func DeleteCanvas(c *gin.Context) {
 	id, err := parseCanvasID(c)
 	if err != nil {

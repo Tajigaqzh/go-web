@@ -167,8 +167,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/canvases/{id}": {
-            "get": {
+        "/canvases/deleteById/{id}": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -180,7 +180,7 @@ const docTemplate = `{
                 "tags": [
                     "canvases"
                 ],
-                "summary": "获取画布详情",
+                "summary": "删除画布",
                 "parameters": [
                     {
                         "type": "integer",
@@ -194,19 +194,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/resp.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Canvas"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/resp.Response"
                         }
                     },
                     "400": {
@@ -240,8 +228,10 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "put": {
+            }
+        },
+        "/canvases/updateById/{id}": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -331,8 +321,10 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/canvases/{id}": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -344,7 +336,7 @@ const docTemplate = `{
                 "tags": [
                     "canvases"
                 ],
-                "summary": "删除画布",
+                "summary": "获取画布详情",
                 "parameters": [
                     {
                         "type": "integer",
@@ -358,7 +350,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/resp.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Canvas"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {

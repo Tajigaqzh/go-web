@@ -65,10 +65,10 @@ func SetApiRouter(r *gin.Engine) {
 			canvases.POST("", middleware.RequirePermission(authz.CanvasWrite), controller.CreateCanvas)
 			// GET    /api/v1/canvases/:id           perm: canvas:read
 			canvases.GET("/:id", middleware.RequirePermission(authz.CanvasRead), controller.GetCanvas)
-			// PUT    /api/v1/canvases/:id           perm: canvas:write
-			canvases.PUT("/:id", middleware.RequirePermission(authz.CanvasWrite), controller.UpdateCanvas)
-			// DELETE /api/v1/canvases/:id           perm: canvas:write
-			canvases.DELETE("/:id", middleware.RequirePermission(authz.CanvasWrite), controller.DeleteCanvas)
+			// POST   /api/v1/canvases/updateById/:id    perm: canvas:write
+			canvases.POST("/updateById/:id", middleware.RequirePermission(authz.CanvasWrite), controller.UpdateCanvas)
+			// POST   /api/v1/canvases/deleteById/:id    perm: canvas:write
+			canvases.POST("/deleteById/:id", middleware.RequirePermission(authz.CanvasWrite), controller.DeleteCanvas)
 			// POST   /api/v1/canvases/:id/submit    perm: canvas:write
 			canvases.POST("/:id/submit", middleware.RequirePermission(authz.CanvasWrite), controller.SubmitCanvas)
 		}

@@ -161,8 +161,8 @@
                 }
             }
         },
-        "/canvases/{id}": {
-            "get": {
+        "/canvases/deleteById/{id}": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -174,7 +174,7 @@
                 "tags": [
                     "canvases"
                 ],
-                "summary": "获取画布详情",
+                "summary": "删除画布",
                 "parameters": [
                     {
                         "type": "integer",
@@ -188,19 +188,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/resp.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Canvas"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/resp.Response"
                         }
                     },
                     "400": {
@@ -234,8 +222,10 @@
                         }
                     }
                 }
-            },
-            "put": {
+            }
+        },
+        "/canvases/updateById/{id}": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -325,8 +315,10 @@
                         }
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/canvases/{id}": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -338,7 +330,7 @@
                 "tags": [
                     "canvases"
                 ],
-                "summary": "删除画布",
+                "summary": "获取画布详情",
                 "parameters": [
                     {
                         "type": "integer",
@@ -352,7 +344,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/resp.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/resp.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/model.Canvas"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "400": {

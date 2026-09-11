@@ -14,7 +14,7 @@ var (
 )
 
 type Claims struct {
-	UserID   uint `json:"user_id"`
+	UserID   int64 `json:"user_id"`
 	Role     int  `json:"role"`
 	VipLevel int  `json:"vip_level"`
 	jwt.RegisteredClaims
@@ -34,7 +34,7 @@ func RefreshTTL() time.Duration {
 	return refreshTTL
 }
 
-func IssueAccessToken(userID uint, role, vipLevel int) (string, error) {
+func IssueAccessToken(userID int64, role, vipLevel int) (string, error) {
 	now := time.Now()
 	claims := Claims{
 		UserID:   userID,

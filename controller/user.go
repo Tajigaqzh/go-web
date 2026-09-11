@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"go-web/logger"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type listUsersQuery struct {
@@ -59,3 +61,51 @@ func CreateUser(c *gin.Context) {
 	}
 	resp.Created(c, user)
 }
+
+func updateUserStatus(c *gin.Context, status int, action string) {
+	id, err := parseIDParam(c)
+	if err != nil {
+		return
+	}
+
+	user, err := model.GetUserByID(id)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			resp.Fail(c, http.StatusNotFound, resp.CodeNotFound, resp.MsgListUsersFailed)
+			return
+		}
+		logger.Log.Error(action+" user failed", zap.Error(err))
+		resp.Fail(c, http.StatusInternalServerError, resp.CodeInternal, resp.MsgListUsersFailed)
+		return
+	}
+
+	if user.Status == status {
+		resp.OK(c, gin.H{"status": status})
+		return
+	}
+
+	if err := user.UpdateStatus(status); err != nil {
+		logger.Log.Error(action+" user failed", zap.Error(err))
+		resp.Fail(c, http.StatusInternalServerError, resp.CodeInternal, resp.MsgListUsersFailed)
+		return
+	}
+	resp.OK(c, gin.H{"status": status})
+}
+
+func BanUser(c *gin.Context) {
+	updateUserStatus(c, model.StatusDisabled, "ban")
+}
+
+func FreezeUser(c *gin.Context) {
+	updateUserStatus(c, model.StatusFrozen, "freeze")
+}
+
+func DeleteUser(c *gin.Context) {
+	updateUserStatus(c, model.StatusDeleted, "delete")
+}
+
+func RestoreUser(c *gin.Context) {
+	updateUserStatus(c, model.StatusEnabled, "restore")
+}
+
+

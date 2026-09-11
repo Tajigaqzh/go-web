@@ -77,7 +77,7 @@ func ListCanvases(c *gin.Context) {
 // @Failure 400,401,403,404,500 {object} resp.Response
 // @Router /canvases/{id} [get]
 func GetCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
@@ -151,7 +151,7 @@ func CreateCanvas(c *gin.Context) {
 // @Failure 400,401,403,404,409,500 {object} resp.Response
 // @Router /canvases/updateById/{id} [post]
 func UpdateCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
@@ -202,7 +202,7 @@ func UpdateCanvas(c *gin.Context) {
 // @Failure 400,401,403,404,500 {object} resp.Response
 // @Router /canvases/deleteById/{id} [post]
 func DeleteCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
@@ -234,7 +234,7 @@ func DeleteCanvas(c *gin.Context) {
 // @Failure 400,401,403,404,500 {object} resp.Response
 // @Router /canvases/{id}/submit [post]
 func SubmitCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
@@ -257,16 +257,16 @@ func SubmitCanvas(c *gin.Context) {
 	resp.OK(c, canvas)
 }
 
-func parseCanvasID(c *gin.Context) (uint, error) {
+func parseIDParam(c *gin.Context) (int64, error) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		resp.Fail(c, http.StatusBadRequest, resp.CodeInvalidParam, resp.MsgInvalidCanvasID)
 		return 0, err
 	}
-	return uint(id), nil
+	return int64(id), nil
 }
 
-func loadOwnedCanvas(c *gin.Context, id uint) (*model.Canvas, *model.User, bool) {
+func loadOwnedCanvas(c *gin.Context, id int64) (*model.Canvas, *model.User, bool) {
 	canvas, err := model.GetCanvasByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

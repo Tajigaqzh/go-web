@@ -20,8 +20,8 @@ type createVipPlanRequest struct {
 }
 
 type subscribeRequest struct {
-	PlanID   uint `json:"plan_id" binding:"required"`
-	Days     int  `json:"days" binding:"omitempty,min=1,max=365"`
+	PlanID int64 `json:"plan_id" binding:"required"`
+	Days   int   `json:"days" binding:"omitempty,min=1,max=365"`
 }
 
 func ListMyVipPlans(c *gin.Context) {
@@ -55,11 +55,10 @@ func CreateVipPlan(c *gin.Context) {
 }
 
 func ListPublisherVipPlans(c *gin.Context) {
-	publisherID, err := parseCanvasID(c) // reuse :id param parser name is wrong - use publisher id
+	publisherID, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
-	// parseCanvasID uses c.Param("id") - for /publishers/:id/vip-plans this works if param is id
 	list, err := model.ListPublisherVipPlans(publisherID)
 	if err != nil {
 		logger.Log.Error("list publisher vip plans failed", zap.Error(err))
@@ -69,8 +68,8 @@ func ListPublisherVipPlans(c *gin.Context) {
 	resp.OK(c, list)
 }
 
-func SubscribePublisherVIP(c *gin.Context) {
-	publisherID, err := parseCanvasID(c)
+func SubscribePublisherVip(c *gin.Context) {
+	publisherID, err := parseIDParam(c)
 	if err != nil {
 		return
 	}

@@ -76,6 +76,25 @@ func Register(c *gin.Context) {
 	})
 }
 
+func checkUserStatus(c *gin.Context, user *model.User) bool {
+	switch user.Status {
+	case model.StatusEnabled:
+		return true
+	case model.StatusDisabled:
+		resp.Fail(c, http.StatusForbidden, resp.CodeAuthBanned, resp.MsgAuthBanned)
+		return false
+	case model.StatusFrozen:
+		resp.Fail(c, http.StatusForbidden, resp.CodeAuthFrozen, resp.MsgAuthFrozen)
+		return false
+	case model.StatusDeleted:
+		resp.Fail(c, http.StatusUnauthorized, resp.CodeAuthInvalid, resp.MsgLoginFailed)
+		return false
+	default:
+		resp.Fail(c, http.StatusForbidden, resp.CodeAuthDisabled, resp.MsgAuthDisabled)
+		return false
+	}
+}
+
 func Login(c *gin.Context) {
 	var req loginRequest
 	if err := resp.BindJSON(c, &req); err != nil {
@@ -92,8 +111,11 @@ func Login(c *gin.Context) {
 		resp.Fail(c, http.StatusInternalServerError, resp.CodeInternal, resp.MsgLoginFailed)
 		return
 	}
-	if !user.CheckPassword(req.Password) || user.Status != model.StatusEnabled {
+	if !user.CheckPassword(req.Password) {
 		resp.Fail(c, http.StatusUnauthorized, resp.CodeAuthInvalid, resp.MsgLoginFailed)
+		return
+	}
+	if !checkUserStatus(c, user) {
 		return
 	}
 

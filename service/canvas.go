@@ -81,7 +81,7 @@ func SubmitCanvasForReview(canvas *model.Canvas, accessLevel, requiredPlanLevel 
 	)
 }
 
-func ApproveCanvas(canvas *model.Canvas, auditorID uint) error {
+func ApproveCanvas(canvas *model.Canvas, auditorID int64) error {
 	if canvas == nil || canvas.PublishStatus != model.CanvasStatusPending {
 		return ErrInvalidAudit
 	}
@@ -93,7 +93,7 @@ func ApproveCanvas(canvas *model.Canvas, auditorID uint) error {
 	return canvas.UpdatePublishMeta()
 }
 
-func RejectCanvas(canvas *model.Canvas, auditorID uint, reason string) error {
+func RejectCanvas(canvas *model.Canvas, auditorID int64, reason string) error {
 	if canvas == nil || canvas.PublishStatus != model.CanvasStatusPending {
 		return ErrInvalidAudit
 	}

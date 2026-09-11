@@ -54,12 +54,12 @@ func RequirePermission(permission authz.Permission) gin.HandlerFunc {
 	}
 }
 
-func CurrentUserID(c *gin.Context) uint {
+func CurrentUserID(c *gin.Context) int64 {
 	v, ok := c.Get(ContextUserID)
 	if !ok {
 		return 0
 	}
-	id, _ := v.(uint)
+	id, _ := v.(int64)
 	return id
 }
 

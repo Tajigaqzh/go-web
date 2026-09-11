@@ -7,23 +7,26 @@ const (
 )
 
 type Notification struct {
-	ID        uint       `json:"id" gorm:"primaryKey"`
-	UserID    uint       `json:"user_id" gorm:"index;not null"`
+	ID        int64      `json:"id" gorm:"primaryKey;autoIncrement:false"`
+	UserID    int64      `json:"user_id" gorm:"index;not null"`
 	Type      string     `json:"type" gorm:"size:32;index"`
 	Title     string     `json:"title" gorm:"size:128"`
 	Content   string     `json:"content" gorm:"size:512"`
 	RefType   string     `json:"ref_type" gorm:"size:32"`
-	RefID     uint       `json:"ref_id"`
+	RefID     int64      `json:"ref_id"`
 	Read      bool       `json:"read" gorm:"default:false"`
 	CreatedAt time.Time  `json:"created_at"`
 	ReadAt    *time.Time `json:"read_at"`
 }
 
 func (n *Notification) Insert() error {
+	if n.ID == 0 {
+		n.ID = NextID()
+	}
 	return DB.Create(n).Error
 }
 
-func ListNotifications(userID uint, page, size int) ([]Notification, int64, error) {
+func ListNotifications(userID int64, page, size int) ([]Notification, int64, error) {
 	var total int64
 	q := DB.Model(&Notification{}).Where("user_id = ?", userID)
 	if err := q.Count(&total).Error; err != nil {
@@ -34,22 +37,22 @@ func ListNotifications(userID uint, page, size int) ([]Notification, int64, erro
 	return list, total, err
 }
 
-func MarkNotificationRead(id, userID uint) error {
+func MarkNotificationRead(id, userID int64) error {
 	now := time.Now()
 	return DB.Model(&Notification{}).
 		Where("id = ? AND user_id = ?", id, userID).
 		Updates(map[string]any{"read": true, "read_at": now}).Error
 }
 
-func ListAuditorIDs() ([]uint, error) {
-	var ids []uint
+func ListAuditorIDs() ([]int64, error) {
+	var ids []int64
 	err := DB.Model(&User{}).
 		Where("role = ? AND status = ?", RoleAuditor, StatusEnabled).
 		Pluck("id", &ids).Error
 	return ids, err
 }
 
-func NotifyAuditors(title, content string, canvasID uint) error {
+func NotifyAuditors(title, content string, canvasID int64) error {
 	ids, err := ListAuditorIDs()
 	if err != nil {
 		return err

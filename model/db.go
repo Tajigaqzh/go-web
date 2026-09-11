@@ -29,6 +29,7 @@ func InitDB(cfg *config.DatabaseConfig) error {
 	}
 
 	DB = db
+	InitSnowflake(0)
 	if err := seedAdmin(); err != nil {
 		return err
 	}

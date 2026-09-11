@@ -64,12 +64,31 @@ func (cfg *JWTConfig) RefreshDuration() time.Duration {
 	return d
 }
 
+type WechatConfig struct {
+	AppID       string `mapstructure:"app_id"`
+	AppSecret   string `mapstructure:"app_secret"`
+	RedirectURI string `mapstructure:"redirect_uri"`
+}
+
+type OAuthProviderConfig struct {
+	ClientID     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
+	RedirectURI  string `mapstructure:"redirect_uri"`
+}
+
+type AuthConfig struct {
+	Wechat WechatConfig        `mapstructure:"wechat"`
+	GitHub OAuthProviderConfig `mapstructure:"github"`
+	Google OAuthProviderConfig `mapstructure:"google"`
+}
+
 type Config struct {
 	Database DatabaseConfig `mapstructure:"database"`
 	Redis    RedisConfig    `mapstructure:"redis"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
 	Server   ServerConfig   `mapstructure:"server"`
 	Log      LogConfig      `mapstructure:"log"`
+	Auth     AuthConfig     `mapstructure:"auth"`
 }
 
 func LoadConfig() *Config {

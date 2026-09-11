@@ -1,7 +1,7 @@
 package model
 
 type Material struct {
-	ID          uint   `json:"id" gorm:"primaryKey"`
+	ID          int64  `json:"id" gorm:"primaryKey;autoIncrement:false"`
 	Key         string `json:"key" gorm:"uniqueIndex;size:64;not null"`
 	Title       string `json:"title" gorm:"size:128;not null"`
 	Kind        string `json:"kind" gorm:"size:32;not null"`
@@ -19,6 +19,9 @@ func ListMaterials(vipLevel int) ([]Material, error) {
 }
 
 func (m *Material) Insert() error {
+	if m.ID == 0 {
+		m.ID = NextID()
+	}
 	return DB.Create(m).Error
 }
 

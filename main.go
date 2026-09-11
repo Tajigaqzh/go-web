@@ -5,6 +5,7 @@ import (
 
 	"go-web/authz"
 	"go-web/config"
+	"go-web/controller"
 	"go-web/logger"
 	"go-web/model"
 	"go-web/resp"
@@ -63,6 +64,8 @@ func main() {
 			logger.Log.Error("failed to close redis", zap.Error(err))
 		}
 	}()
+
+	controller.AuthConfig = cfg.Auth
 
 	r := router.SetRouter()
 

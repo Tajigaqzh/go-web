@@ -36,13 +36,13 @@ func refreshKey(token string) string {
 	return "refresh:" + token
 }
 
-func SetRefreshToken(token string, userID uint, ttl time.Duration) error {
+func SetRefreshToken(token string, userID int64, ttl time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	return RDB.Set(ctx, refreshKey(token), userID, ttl).Err()
 }
 
-func GetRefreshUserID(token string) (uint, error) {
+func GetRefreshUserID(token string) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	val, err := RDB.Get(ctx, refreshKey(token)).Result()
@@ -53,7 +53,7 @@ func GetRefreshUserID(token string) (uint, error) {
 	if err != nil {
 		return 0, err
 	}
-	return uint(id), nil
+	return int64(id), nil
 }
 
 func DeleteRefreshToken(token string) error {

@@ -9,6 +9,8 @@ const (
 
 	StatusEnabled  = 1
 	StatusDisabled = 2
+	StatusFrozen   = 3
+	StatusDeleted  = 4
 
 	VipFree = 0
 	Vip1    = 1

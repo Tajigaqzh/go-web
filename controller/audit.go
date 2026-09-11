@@ -45,7 +45,7 @@ func ListPendingCanvases(c *gin.Context) {
 }
 
 func ApproveCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
@@ -66,7 +66,7 @@ func ApproveCanvas(c *gin.Context) {
 }
 
 func RejectCanvas(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}

@@ -39,6 +39,33 @@ func SetApiRouter(r *gin.Engine) {
 		controller.Refresh,
 	)
 
+	// ---- 加密公钥（公开）----
+	api.GET("/auth/public-key", controller.GetPublicKey)
+
+	// ---- 验证码与第三方登录（公开）----
+	api.POST("/auth/sms/send", middleware.RateLimitByIP("sms_send", 3, time.Minute), controller.SendSmsCode)
+	api.POST("/auth/sms/login", middleware.RateLimitByIP("sms_login", 10, time.Minute), controller.SmsLogin)
+	api.POST("/auth/sms/register", middleware.RateLimitByIP("sms_register", 5, time.Minute), controller.SmsRegister)
+	api.POST("/auth/email/send", middleware.RateLimitByIP("email_send", 3, time.Minute), controller.SendEmailCode)
+	api.POST("/auth/email/login", middleware.RateLimitByIP("email_login", 10, time.Minute), controller.EmailLogin)
+	api.POST("/auth/email/register", middleware.RateLimitByIP("email_register", 5, time.Minute), controller.EmailRegister)
+	api.POST("/auth/wechat", middleware.RateLimitByIP("wechat_login", 20, time.Minute), controller.WechatLogin)
+	api.POST("/auth/qrcode", controller.GetQrcode)
+	api.GET("/auth/qrcode/status", controller.GetQrcodeStatus)
+
+	// ---- 邮箱+密码登录（二次验证）----
+	api.POST("/auth/login/email-password", middleware.RateLimitByIP("email_password_login", 10, time.Minute), controller.EmailPasswordLogin)
+	api.POST("/auth/login/send-verify-code", middleware.RateLimitByIP("send_verify_code", 3, time.Minute), controller.SendVerifyCode)
+	api.POST("/auth/login/verify", middleware.RateLimitByIP("verify_login", 10, time.Minute), controller.VerifyAndLogin)
+
+	// ---- OAuth2 跳转登录（公开）----
+	api.GET("/oauth/github/authorize", controller.GitHubAuthorize)
+	api.GET("/oauth/github/callback", controller.GitHubCallback)
+	api.GET("/oauth/google/authorize", controller.GoogleAuthorize)
+	api.GET("/oauth/google/callback", controller.GoogleCallback)
+	api.GET("/oauth/wechat/authorize", controller.WechatAuthorize)
+	api.GET("/oauth/wechat/callback", controller.WechatCallback)
+
 	// ---- 以下全部需要 Auth() ----
 	api.Use(middleware.Auth())
 	{
@@ -49,12 +76,24 @@ func SetApiRouter(r *gin.Engine) {
 		// POST /api/v1/notifications/:id/read
 		api.POST("/notifications/:id/read", controller.ReadNotification)
 
+		// 扫码登录（手机端已登录后操作）
+		api.POST("/auth/qrcode/scan", controller.ScanQrcode)
+		api.POST("/auth/qrcode/confirm", controller.ConfirmQrcode)
+
 		users := api.Group("/users")
 		{
 			// GET  /api/v1/users                    perm: user:read
 			users.GET("", middleware.RequirePermission(authz.UserRead), controller.GetUsers)
 			// POST /api/v1/users                    perm: user:write
 			users.POST("", middleware.RequirePermission(authz.UserWrite), controller.CreateUser)
+			// POST /api/v1/users/:id/ban            perm: user:write
+			users.POST("/:id/ban", middleware.RequirePermission(authz.UserWrite), controller.BanUser)
+			// POST /api/v1/users/:id/freeze         perm: user:write
+			users.POST("/:id/freeze", middleware.RequirePermission(authz.UserWrite), controller.FreezeUser)
+			// POST /api/v1/users/:id/delete-account perm: user:write
+			users.POST("/:id/delete-account", middleware.RequirePermission(authz.UserWrite), controller.DeleteUser)
+			// POST /api/v1/users/:id/restore        perm: user:write
+			users.POST("/:id/restore", middleware.RequirePermission(authz.UserWrite), controller.RestoreUser)
 		}
 
 		canvases := api.Group("/canvases")
@@ -94,7 +133,7 @@ func SetApiRouter(r *gin.Engine) {
 		// GET  /api/v1/publishers/:id/vip-plans
 		api.GET("/publishers/:id/vip-plans", controller.ListPublisherVipPlans)
 		// POST /api/v1/publishers/:id/subscribe
-		api.POST("/publishers/:id/subscribe", controller.SubscribePublisherVIP)
+		api.POST("/publishers/:id/subscribe", controller.SubscribePublisherVip)
 
 		materials := api.Group("/materials")
 		{

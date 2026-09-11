@@ -116,7 +116,7 @@ func TestCanvasCRUD(t *testing.T) {
 	r := router.SetRouter()
 	auth := issueAuth(t, "painter", model.RoleUser)
 
-	create := func(title string) uint {
+	create := func(title string) int64 {
 		t.Helper()
 		doc := json.RawMessage(`{"activePageId":"page-1","pageIds":["page-1"],"pages":{}}`)
 		createBody, _ := json.Marshal(map[string]any{

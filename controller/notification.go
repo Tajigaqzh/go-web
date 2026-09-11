@@ -38,7 +38,7 @@ func ListNotifications(c *gin.Context) {
 }
 
 func ReadNotification(c *gin.Context) {
-	id, err := parseCanvasID(c)
+	id, err := parseIDParam(c)
 	if err != nil {
 		return
 	}
